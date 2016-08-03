@@ -1,0 +1,174 @@
+<html>
+  <head>
+<title>Bars and Grpahs</title>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <link rel='stylesheet' href='/stylesheets/style.css' />
+  
+    <style>
+    td {border:1px solid grey;padding:4px;text-align:center;}
+    .pclass{    font-size: 18px;
+    font-weight: bold;}
+    svg
+    {
+            margin-top: -26%;
+            margin-left: 4%;
+    }
+            </style>
+    </head>
+<body>
+
+
+
+<div id = "chart" class="chart">
+    <script>
+
+         var data;
+
+             $.getJSON('/getData', function( response ) {
+                       data = response;
+                       console.log(data);
+              
+                  for (var i=0;i<data.length;i++)
+                     {
+                         //console.log(data[i].Age);
+                         document.getElementById("a"+i).innerHTML =data[i].Year;
+                         document.getElementById("b"+i).innerHTML =data[i].Income;
+                     }
+                 
+var margin = {top: 100, right: 20, bottom: 50, left: 250},
+    width = 800 - margin.left - margin.right,
+    height = 550 - margin.top - margin.bottom;
+
+
+// set the ranges
+var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear().range([height, 10]);
+
+// define the axis
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10);
+
+
+// add the SVG element
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+// load the data
+/*d3.json("data.json", function(error, data) {*/
+
+    data.forEach(function(d) {
+        d.Year = d.Year;
+        d.Income = +d.Income;
+    });
+	
+  // scale the range of the data
+  x.domain(data.map(function(d) { return d.Year; }));
+  y.domain([0, d3.max(data, function(d) { return d.Income; })]);
+
+  // add axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      svg.append("text")
+		.attr("x", width / 2 )
+        .attr("y",  height + margin.bottom)
+        .style("text-anchor", "middle")
+        .text("Years");
+   
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 5)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Income in Million $");
+    
+svg.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .style("font-size", "20px") 
+        .style("text-decoration", "underline")  
+        .text("TcS Yearly profit in Bar Chart");
+    
+
+    
+  // Add bar chart
+  svg.selectAll("bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.Year); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.Income); })
+      .attr("height", function(d) { return height - y(d.Income); });
+
+
+
+          });
+
+    </script>
+    </div>
+   <table>
+    <tr class="pclass">
+    <td>
+        Year</td>
+        <td>Revenue (in Billion $)</td>
+       </tr>
+    <tr>
+    <td id="a0"></td>
+     <td id="b0"></td>
+    </tr>
+   
+     <tr>
+    <td id="a1"></td>
+     <td id="b1"></td>
+    </tr>
+    
+     <tr>
+    <td id="a2"></td>
+     <td id="b2"></td>
+    </tr>
+    
+     <tr>
+    <td id="a3"></td>
+     <td id="b3"></td>
+    </tr>
+    
+     <tr>
+    <td id="a4"></td>
+     <td id="b4"></td>
+    </tr>
+    
+     <tr>
+    <td id="a5"></td>
+     <td id="b5"></td>
+    </tr>
+       <tr>
+    <td id="a6"></td>
+     <td id="b6"></td>
+    </tr>
+       <tr>
+    <td id="a7"></td>
+     <td id="b7"></td>
+    </tr>
+</table>
+  </body>
+</html>
