@@ -1,0 +1,131 @@
+<html>
+  <head>
+<title>Bars and Grpahs</title>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+<body>
+<h1 style="margin-left: 20%;margin-bottom:0%;">Different Age Groups in TCS</h1>
+
+<style>
+    td {border:1px solid grey;padding:4px;}
+    .pclass{    font-size: 18px;
+    font-weight: bold;}
+    svg
+    {
+            margin-top: -15%;
+            margin-left: 4%;
+    }
+            </style>
+
+    <script>
+
+         var data;
+
+             $.getJSON('/getData', function( response ) {
+                       data = response;
+                       console.log(data);
+              
+                 for (var i=0;i<data.length;i++)
+                     {
+                         //console.log(data[i].Age);
+                         document.getElementById("a"+i).innerHTML =data[i].Age+"&nbsp;&nbsp;"+"Years";
+                         document.getElementById("b"+i).innerHTML =data[i].population+"&nbsp;&nbsp;"+"Employees";
+                     }
+                
+                
+var width = 960,
+    height = 500,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scale.ordinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var arc = d3.svg.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+var labelArc = d3.svg.arc()
+    .outerRadius(radius - 90)
+    .innerRadius(radius - 90);
+
+var pie = d3.layout.pie()
+    .sort(null)
+    .value(function(d) { return d.population; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+/*d3.csv("data.csv", type, function(error, data) {
+  if (error) throw error;*/
+
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.Age); });
+
+  g.append("text")
+      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .text(function(d) { return d.data.Age; });
+
+  
+                 
+function type(d) {
+  d.population = +d.population;
+  return d;
+}
+
+
+
+
+          });
+
+    </script>
+    </div>
+   <table>
+    <tr class="pclass">
+    <td>
+        Age Group</td>
+        <td>population</td>
+       </tr>
+    <tr>
+    <td id="a0"></td>
+     <td id="b0"></td>
+    </tr>
+   
+     <tr>
+    <td id="a1"></td>
+     <td id="b1"></td>
+    </tr>
+    
+     <tr>
+    <td id="a2"></td>
+     <td id="b2"></td>
+    </tr>
+    
+     <tr>
+    <td id="a3"></td>
+     <td id="b3"></td>
+    </tr>
+    
+     <tr>
+    <td id="a4"></td>
+     <td id="b4"></td>
+    </tr>
+    
+     <tr>
+    <td id="a5"></td>
+     <td id="b5"></td>
+    </tr>
+</table>
+  </body>
+</html>
